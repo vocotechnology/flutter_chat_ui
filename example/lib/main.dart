@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -25,6 +26,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const MaterialApp(
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('tr'),
+          Locale('en'),
+        ],
         home: ChatPage(),
       );
 }
@@ -41,9 +51,8 @@ class _ChatPageState extends State<ChatPage> {
   final AutoScrollController scrollController = AutoScrollController();
 
   List<types.Message> _messages = [];
-  final _user = const types.User(
-      id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
-      firstName: 'yesdevasdasdasdasdasdasdasd123123');
+  final _user =
+      const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac', firstName: 'yesdevasdasdasdasdasdasdasd123123');
 
   @override
   void initState() {
@@ -155,10 +164,8 @@ class _ChatPageState extends State<ChatPage> {
 
       if (message.uri.startsWith('http')) {
         try {
-          final index =
-              _messages.indexWhere((element) => element.id == message.id);
-          final updatedMessage =
-              (_messages[index] as types.FileMessage).copyWith(
+          final index = _messages.indexWhere((element) => element.id == message.id);
+          final updatedMessage = (_messages[index] as types.FileMessage).copyWith(
             isLoading: true,
           );
 
@@ -177,10 +184,8 @@ class _ChatPageState extends State<ChatPage> {
             await file.writeAsBytes(bytes);
           }
         } finally {
-          final index =
-              _messages.indexWhere((element) => element.id == message.id);
-          final updatedMessage =
-              (_messages[index] as types.FileMessage).copyWith(
+          final index = _messages.indexWhere((element) => element.id == message.id);
+          final updatedMessage = (_messages[index] as types.FileMessage).copyWith(
             isLoading: null,
           );
 
@@ -224,9 +229,8 @@ class _ChatPageState extends State<ChatPage> {
 
   void _loadMessages() async {
     final response = await rootBundle.loadString('assets/messages.json');
-    final messages = (jsonDecode(response) as List)
-        .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
-        .toList();
+    final messages =
+        (jsonDecode(response) as List).map((e) => types.Message.fromJson(e as Map<String, dynamic>)).toList();
 
     setState(() {
       _messages = messages;
@@ -245,8 +249,7 @@ class _ChatPageState extends State<ChatPage> {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage(
-                    'https://avatars.githubusercontent.com/u/6020066?v=4'),
+                backgroundImage: NetworkImage('https://avatars.githubusercontent.com/u/6020066?v=4'),
               ),
               SizedBox(width: 8),
               Column(
@@ -292,16 +295,13 @@ class _ChatPageState extends State<ChatPage> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: (repliedMessage is types.TextMessage)
                                         ? TextMessage(
-                                            message: repliedMessage!
-                                                as types.TextMessage,
-                                            emojiEnlargementBehavior:
-                                                EmojiEnlargementBehavior.never,
+                                            message: repliedMessage! as types.TextMessage,
+                                            emojiEnlargementBehavior: EmojiEnlargementBehavior.never,
                                             hideBackgroundOnEmojiMessages: true,
                                             showName: true,
                                             usePreviewData: false,
@@ -312,34 +312,25 @@ class _ChatPageState extends State<ChatPage> {
                                             children: [
                                               Expanded(
                                                 child: TextMessage(
-                                                  emojiEnlargementBehavior:
-                                                      EmojiEnlargementBehavior
-                                                          .never,
+                                                  emojiEnlargementBehavior: EmojiEnlargementBehavior.never,
                                                   message: types.TextMessage(
-                                                      author: repliedMessage!
-                                                          .author,
-                                                      id: repliedMessage?.id ??
-                                                          '',
+                                                      author: repliedMessage!.author,
+                                                      id: repliedMessage?.id ?? '',
                                                       text: 'Fotoğraf'),
-                                                  hideBackgroundOnEmojiMessages:
-                                                      true,
+                                                  hideBackgroundOnEmojiMessages: true,
                                                   showName: true,
                                                   usePreviewData: false,
                                                   maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),
                                               const SizedBox(width: 8),
                                               ImageMessage(
                                                 message: types.ImageMessage(
                                                   size: 50,
-                                                  author:
-                                                      repliedMessage!.author,
+                                                  author: repliedMessage!.author,
                                                   id: repliedMessage!.id,
-                                                  uri: (repliedMessage!
-                                                          as types.ImageMessage)
-                                                      .uri,
+                                                  uri: (repliedMessage! as types.ImageMessage).uri,
                                                   name: 'Fotoğraf',
                                                 ),
                                                 messageWidth: 50,
@@ -414,10 +405,8 @@ class _ChatPageState extends State<ChatPage> {
                   color: Colors.black,
                 ),
               ),
-              inputPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
-              inputMargin:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              inputPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
+              inputMargin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
               inputContainerDecoration: BoxDecoration(
                 color: Colors.grey[900],
                 borderRadius: BorderRadius.circular(40),
@@ -432,10 +421,7 @@ class _ChatPageState extends State<ChatPage> {
               }
               setState(() {
                 if (message is types.TextMessage) {
-                  repliedMessage = types.TextMessage(
-                      author: message.author,
-                      id: message.id,
-                      text: (message).text);
+                  repliedMessage = types.TextMessage(author: message.author, id: message.id, text: (message).text);
                 } else if (message is types.ImageMessage) {
                   repliedMessage = types.ImageMessage(
                     size: 50,
@@ -464,11 +450,9 @@ class _ChatPageState extends State<ChatPage> {
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
-                          final index = _messages.indexWhere(
-                              (element) => element.id == message.id);
+                          final index = _messages.indexWhere((element) => element.id == message.id);
 
-                          final updatedMessage =
-                              (_messages[index] as types.TextMessage).copyWith(
+                          final updatedMessage = (_messages[index] as types.TextMessage).copyWith(
                             text: 'Deleted',
                           );
 
@@ -486,9 +470,7 @@ class _ChatPageState extends State<ChatPage> {
                           Navigator.pop(context);
                           setState(() {
                             repliedMessage = types.TextMessage(
-                                author: message.author,
-                                id: message.id,
-                                text: (message as types.TextMessage).text);
+                                author: message.author, id: message.id, text: (message as types.TextMessage).text);
                           });
                         },
                         child: const Align(
